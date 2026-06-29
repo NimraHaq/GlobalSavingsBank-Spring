@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Global Savings Bank</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}" />
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Simple line icons-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.5.5/css/simple-line-icons.min.css" rel="stylesheet" />
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link th:href="@{/css/styles.css}" rel="stylesheet" />
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #f4f6fb;
+        }
+
+        .app-header {
+            background: linear-gradient(120deg, #0d1b3e 0%, #102a5c 100%);
+            color: #fff;
+            padding: 0 32px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 12px rgba(13, 27, 62, .18);
+        }
+
+        /* Left: brand */
+        .app-header .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: .01em;
+        }
+        .app-header .brand .glyph {
+            width: 34px; height: 34px;
+            display: grid; place-items: center;
+            border: 1.5px solid rgba(255, 255, 255, .5);
+            border-radius: 8px;
+            color: #c8a24a;
+            font-weight: 700;
+        }
+
+        /* Right: greeting */
+        .app-header .greeting {
+            display: flex;
+            align-items: left;
+            gap: 30px;
+            font-size: .98rem;
+        }
+        .app-header .greeting .welcome {
+            color: rgba(255, 255, 255, .78);
+        }
+        .app-header .greeting .username {
+            font-weight: 600;
+            color: #fff;
+        }
+        .app-header .greeting .avatar {
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .14);
+            display: grid; place-items: center;
+            font-weight: 600;
+            color: #fff;
+            font-size: .9rem;
+        }
+        :root {
+            --navy:   #0d1b3e;
+            --navy2:  #102a5c;
+            --ink:    #1a2238;
+            --line:   #d3dae8;
+            --accent: #2f6df6;
+            --accent-dk: #1f53c9;
+            --muted:  #6b7689;
+            --danger: #b3261e;
+            --danger-bg: #fbe9e7;
+            --bg:     #f4f6fb;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+            padding: 40px 20px;
+        }
+
+        .form-wrap { max-width: 680px; margin: 0 auto; }
+
+        .form-head {
+            background: linear-gradient(120deg, var(--navy) 0%, var(--navy2) 100%);
+            color: #fff;
+            padding: 26px 32px;
+            border-radius: 14px 14px 0 0;
+        }
+        .form-head h1 { font-size: 1.45rem; font-weight: 600; }
+        .form-head p  { color: rgba(255,255,255,.72); font-size: .92rem; margin-top: 6px; }
+
+        .form-body {
+            background: #fff;
+            padding: 32px;
+            border: 1px solid var(--line);
+            border-top: none;
+            border-radius: 0 0 14px 14px;
+            box-shadow: 0 8px 30px rgba(13,27,62,.06);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .field { margin-bottom: 4px; }
+        .field.full { grid-column: 1 / -1; }
+
+        label.lbl {
+            display: block;
+            font-size: .82rem;
+            font-weight: 600;
+            margin-bottom: 7px;
+            letter-spacing: .01em;
+        }
+        label.lbl .req { color: var(--danger); }
+
+        input[type=text],
+        input[type=email],
+        input[type=tel] {
+            width: 100%;
+            padding: 12px 13px;
+            border: 1px solid var(--line);
+            border-radius: 9px;
+            font-size: .96rem;
+            color: var(--ink);
+            background: #fbfcfe;
+            transition: border-color .15s, box-shadow .15s, background .15s;
+        }
+        input:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(47,109,246,.15);
+        }
+        input.is-invalid { border-color: var(--danger); background: #fffafa; }
+
+        .err {
+            color: var(--danger);
+            font-size: .8rem;
+            margin-top: 6px;
+            display: block;
+        }
+
+        /* radio group */
+        .radio-row { display: flex; gap: 12px; margin-top: 2px; }
+        .radio-pill {
+            flex: 1;
+            position: relative;
+        }
+        .radio-pill input {
+            position: absolute;
+            opacity: 0;
+            inset: 0;
+            cursor: pointer;
+        }
+        .radio-pill span {
+            display: block;
+            text-align: center;
+            padding: 11px;
+            border: 1px solid var(--line);
+            border-radius: 9px;
+            font-size: .93rem;
+            color: var(--muted);
+            background: #fbfcfe;
+            transition: all .15s;
+            cursor: pointer;
+        }
+        .radio-pill input:checked + span {
+            border-color: var(--accent);
+            background: #eef3ff;
+            color: var(--accent-dk);
+            font-weight: 600;
+        }
+        .radio-pill input:focus-visible + span {
+            box-shadow: 0 0 0 3px rgba(47,109,246,.2);
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+            grid-column: 1 / -1;
+        }
+        .btn {
+            padding: 12px 26px;
+            border-radius: 9px;
+            font-size: .96rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid transparent;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+        }
+        .btn-primary { background: var(--accent); color: #fff; border: none; }
+        .btn-primary:hover { background: var(--accent-dk); }
+        .btn-ghost { background: #fff; color: var(--ink); border: 1px solid var(--line); }
+        .btn-ghost:hover { background: var(--bg); }
+
+        @media (max-width: 560px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+<body id="page-top">
+<header class="app-header" th:fragment="appHeader">
+
+    <div class="brand">
+        <span class="glyph">G</span>
+        Global Savings Bank
+    </div>
+
+
+</header>
+<br/><br/>
+
+<div class="form-wrap">
+    <div class="form-head" style="text-align: center;">
+        <h6><span th:text="${role} "></span><span th:text="${action}"></span> Successfully!</h6>
+        <a class="btn btn-primary btn-xl" th:href="@{${goBackLink}}">Go Back</a>
+    </div>
+
+</div>
+
+
+
+<!-- Footer-->
+<footer class="footer text-center">
+    <div class="container px-4 px-lg-5">
+        <ul class="list-inline mb-5">
+            <li class="list-inline-item">
+                <a class="social-link rounded-circle text-white mr-3" href="#!"><i class="icon-social-facebook"></i></a>
+            </li>
+            <li class="list-inline-item">
+                <a class="social-link rounded-circle text-white mr-3" href="#!"><i class="icon-social-twitter"></i></a>
+            </li>
+            <li class="list-inline-item">
+                <a class="social-link rounded-circle text-white" href="#!"><i class="icon-social-github"></i></a>
+            </li>
+        </ul>
+        <p class="text-muted small mb-0">Copyright &copy; Global Savings Bank 2026</p>
+    </div>
+</footer>
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top"><i class="fas fa-angle-up"></i></a>
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<script th:src="@{/js/scripts.js}"></script>
+</body>
+</html>

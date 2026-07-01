@@ -1,6 +1,7 @@
 package com.lombok.lombok.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.Check;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.engine.internal.Cascade;
 
 import java.time.LocalDateTime;
 
@@ -24,10 +26,10 @@ public class User {
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private int id;
 
-    @Column(name="username", nullable = false, length = 45)
+    @Column(name="username", nullable = false, length = 20, unique = true)
     private String username;
 
-    @Column(name="password", nullable = false, length = 45)
+    @Column(name="password", length = 20)
     private String password;
 
     @Column(name="role", nullable = false)
@@ -48,8 +50,9 @@ public class User {
             columnDefinition = "CHAR(1) DEFAULT 'Y'")
     private String isActive = "Y";
 
-    @Column(name="ch_id")
-    private String chId;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="ch_id")
+    private Customer customer;
 
     @CreationTimestamp
     @Column(name="created_on")
@@ -58,4 +61,5 @@ public class User {
     @UpdateTimestamp
     @Column(name="last_updated_on", nullable = true)
     private LocalDateTime lastUpdatedOn;
+
 }

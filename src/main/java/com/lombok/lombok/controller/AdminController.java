@@ -28,11 +28,12 @@ public class AdminController {
         this.customerService = customerService;
     }
 
+    //instead of using StringTrimmerEditor, use @NotBlank annotion
     //string trimmer editor removes starting and trailing white spaces
     //this function pre-processes all controller request
     //so this implementation pre-processes all Strings
     @InitBinder
-    public void removeWhiteSpacesFromString(WebDataBinder webDataBinder){
+    public void initBinder(WebDataBinder webDataBinder){
         //null in constructor -> if a string of all white spaces -> return null
         StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);
         webDataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
@@ -58,16 +59,22 @@ public class AdminController {
             return "customer/AddCustomerForm";
         }else{
             customerService.addCustomer(customerDto);
-            model.addAttribute("role", "Customer");
-            model.addAttribute("action", " added");
+            model.addAttribute("confirmationMsg", "Customer added successfully.");
             model.addAttribute("goBackLink", "/admin/dashboard");
             return "ConfirmationPage";
         }
     }
     @GetMapping("/showFormToAddCustomer")
     public String showFormToAddCustomer(Model model){
-        Customer customer = new Customer();
+
+        CustomerDto customer = new CustomerDto();
         model.addAttribute("customer", customer);
+        return "customer/AddCustomerForm";
+    }
+
+    @GetMapping("/showFormToDeleteCustomer")
+    public String showFormToDeleteCustomer(Model model){
+
         return "customer/AddCustomerForm";
     }
 }

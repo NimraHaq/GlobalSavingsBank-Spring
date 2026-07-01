@@ -3,6 +3,8 @@ package com.lombok.lombok.service;
 import com.lombok.lombok.dao.CustomerDao;
 import com.lombok.lombok.dto.CustomerDto;
 import com.lombok.lombok.entity.Customer;
+import com.lombok.lombok.entity.User;
+import com.lombok.lombok.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,15 +19,19 @@ public class CustomerServiceImpl implements CustomerService{
 
     @Override
     public CustomerDto addCustomer(CustomerDto customerDto) {
-        //add entry in user table as well.
-        Customer customer = customerDao.save(mapDtoToEntity(customerDto));
-        return mapEntityToDto(customer);
+        Customer customer = mapDtoToEntity(customerDto);
+        customer.setIsActive(Constants.NOT_ACTIVE);
+        customer.setUser(User.builder().username(customerDto.getUsername()).password(customerDto.getPassword())
+                .email(customerDto.getEmail()).firstName(customerDto.getFirstName()).lastName(customerDto.getLastName())
+                .role(Constants.CUSTOMER_ROLE).isActive(Constants.NOT_ACTIVE).customer(customer).build());
+        Customer customerFromDb = customerDao.save(customer);
+        return mapEntityToDto(customerFromDb);
     }
 
     private Customer mapDtoToEntity(CustomerDto customerDto){
         Customer customer = Customer.builder().chId(customerDto.getChId()).firstName(customerDto.getFirstName())
                 .lastName(customerDto.getLastName()).phoneNumber(customerDto.getPhoneNumber()).address(customerDto.getAddress())
-                .gender(customerDto.getGender()).age(customerDto.getAge()).postalCode(customerDto.getPostalCode()).build();
+                .gender(customerDto.getGender()).status(customerDto.getStatus()).cnic(customerDto.getCnic()).age(customerDto.getAge()).postalCode(customerDto.getPostalCode()).build();
         return customer;
     }
     private CustomerDto mapEntityToDto(Customer customer){
@@ -33,7 +39,7 @@ public class CustomerServiceImpl implements CustomerService{
                 .lastName(customer.getLastName()).address(customer.getAddress()).phoneNumber(customer.getPhoneNumber())
                 .isActive(customer.getIsActive()).gender(customer.getGender()).email(customer.getEmail())
                 .createdOn(customer.getCreatedOn()).lastUpdatedOn(customer.getLastUpdatedOn())
-                .age(customer.getAge()).postalCode(customer.getPostalCode()).build();
+                .age(customer.getAge()).status(customer.getStatus()).cnic(customer.getCnic()).postalCode(customer.getPostalCode()).build();
         return customerDto;
     }
 }

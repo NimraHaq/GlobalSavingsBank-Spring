@@ -33,6 +33,9 @@ public class Customer {
     @Column(name = "last_name", length = 45)
     private String lastName;
 
+    @Column(name = "cnic", length = 45, nullable = false)
+    private String cnic;
+
     @Column(name = "phone", length = 45)
     private String phoneNumber;
 
@@ -51,12 +54,21 @@ public class Customer {
     @Column(name = "gender")
     private String gender;
 
+    @Check(constraints = "is_active IN ('A', 'B', 'F)")
+    @ColumnDefault("'A'")
+    @Column(name = "status", length = 1, nullable = false)
+    @Builder.Default
+    private String status = Constants.CARD_PRE_ACTIVE_STATUS;
+
     @Check(constraints = "is_active IN ('Y', 'N')")
     @ColumnDefault("'Y'")
     @Column(name = "is_active", length = 1, nullable = false,
             columnDefinition = "CHAR(1) DEFAULT 'Y'")
     @Builder.Default
     private String isActive = Constants.IS_ACTIVE;
+
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
+    private User user;
 
     @Column(name="created_on", nullable = false)
     @CreationTimestamp

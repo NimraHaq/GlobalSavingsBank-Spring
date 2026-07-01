@@ -1,6 +1,7 @@
 package com.lombok.lombok.dto;
 
 import com.lombok.lombok.utils.Constants;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -17,12 +18,25 @@ public class CustomerDto {
     private int chId;
 
     //jakarta.validation.constraints
-    @NotNull(message = "First Name is required.") //these annotation are not form validation on html form
+    @NotBlank(message = "First Name is required.")
     @Size(min=1)
     private String firstName;
     private String lastName;
     private String phoneNumber;
     private String address;
+
+    @NotBlank(message = "Username is required.")
+    @Size(min=4, max = 20)
+    private String username;
+
+    @Size(min=8, max = 12)
+    private String password;
+
+    @NotBlank(message = "CNIC is required.")
+    @Size(min=8, max = 45)
+    private String cnic;
+
+    private String role;
 
     @Email(message = "Please enter a valid email address.")
     private String email;
@@ -43,7 +57,10 @@ public class CustomerDto {
     private String gender;
 
     @Builder.Default
+    private String status = Constants.CARD_PRE_ACTIVE_STATUS;
+    @Builder.Default
     private String isActive = Constants.IS_ACTIVE;
+
     private LocalDateTime createdOn;
     private LocalDateTime lastUpdatedOn;
 }

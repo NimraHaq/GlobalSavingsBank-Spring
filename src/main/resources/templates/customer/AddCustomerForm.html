@@ -135,6 +135,7 @@
         label.lbl .req { color: var(--danger); }
 
         input[type=text],
+        input[type=number],
         input[type=email],
         input[type=tel] {
             width: 100%;
@@ -243,12 +244,29 @@
     <div class="form-body">
         <!-- Binds to a CustomerDto named "customer" in the model.
              Controller: model.addAttribute("customer", new CustomerDto());
-             Posts to /customers/save -->
+              -->
         <form th:action="@{/admin/processFormToAddCustomer}" th:object="${customer}" method="post">
 
             <div class="grid">
 
-                <!-- First name (required) -->
+                <!-- Username (required) -->
+                <div class="field">
+                    <label class="lbl" for="username">Username <span class="req">*</span></label>
+                    <input type="text" id="username" th:field="*{username}"
+                           th:classappend="${#fields.hasErrors('username')} ? 'is-invalid'"
+                           placeholder="e.g. n.haq" />
+                    <span class="err" th:if="${#fields.hasErrors('username')}"
+                          th:errors="*{username}">Username error</span>
+                </div>
+
+                <div class="field">
+                    <label class="lbl" for="cnic">CNIC <span class="req">*</span></label>
+                    <input type="text" id="cnic" th:field="*{cnic}"
+                           th:classappend="${#fields.hasErrors('cnic')} ? 'is-invalid'"
+                            placeholder="e.g. n.haq" />
+                    <span class="err" th:if="${#fields.hasErrors('cnic')}"
+                          th:errors="*{cnic}">cnic error</span>
+                </div>
                 <div class="field">
                     <label class="lbl" for="firstName">First Name <span class="req">*</span></label>
                     <input type="text" id="firstName" th:field="*{firstName}"
@@ -281,7 +299,7 @@
 
                 <!-- Gender radios -->
                 <div class="field full">
-                    <label class="lbl">Gender</label>
+                    <label class="lbl">Gender<span class="req">*</span></label>
                         <div class="radio-row"
                              th:classappend="${#fields.hasErrors('gender')} ? 'is-invalid'">
                             <label class="radio-pill">
@@ -322,7 +340,7 @@
                     <label class="lbl" for="postalCode">Postal Code</label>
                     <input type="text" id="postalCode" th:field="*{postalCode}"
                            th:classappend="${#fields.hasErrors('postalCode')} ? 'is-invalid'"
-                           maxlength="5" placeholder="e.g. 54000" />
+                            placeholder="e.g. 54000" />
                     <span class="err" th:if="${#fields.hasErrors('postalCode')}"
                           th:errors="*{postalCode}">Postal code error</span>
                 </div>

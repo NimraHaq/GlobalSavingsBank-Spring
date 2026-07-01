@@ -235,7 +235,7 @@
 
 <div class="form-wrap">
     <div class="form-head" style="text-align: center;">
-        <h6><span th:text="${role} "></span><span th:text="${action}"></span> Successfully!</h6>
+        <h6 th:text="${confirmationMsg}"></h6>
         <a class="btn btn-primary btn-xl" th:href="@{${goBackLink}}">Go Back</a>
     </div>
 

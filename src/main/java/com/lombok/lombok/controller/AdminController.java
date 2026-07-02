@@ -1,10 +1,10 @@
 package com.lombok.lombok.controller;
 
-import com.lombok.lombok.dao.UserDao;
-import com.lombok.lombok.dto.CustomerDto;
-import com.lombok.lombok.entity.Customer;
-import com.lombok.lombok.entity.User;
+import com.lombok.lombok.dto.UserDto;
 import com.lombok.lombok.service.CustomerService;
+import com.lombok.lombok.service.UserService;
+import com.lombok.lombok.utils.Constants;
+import com.lombok.lombok.utils.Utils;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
@@ -15,16 +15,19 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
+
+
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
 
-    private UserDao userDao;
+    private UserService userService;
     private CustomerService customerService;
 
     @Autowired
-    public AdminController(UserDao userDao, CustomerService customerService) {
-        this.userDao = userDao;
+    public AdminController(UserService userService, CustomerService customerService) {
+        this.userService = userService;
         this.customerService = customerService;
     }
 
@@ -40,9 +43,9 @@ public class AdminController {
     }
 
     @GetMapping("/dashboard")
-    public String getAdminProfile(Authentication authentication, Model model){
+    public String showAdminDashboard(Authentication authentication, Model model){
         String username = authentication.getName();
-        User user =userDao.findUserByUsername(username);
+        UserDto user =userService.findUserByUsername(username);
         model.addAttribute("user", user);
         return "admin/admin-dashboard";
     }
@@ -53,28 +56,75 @@ public class AdminController {
 //        return "admin-dashboard";
 //    }
 
+    @GetMapping("/showFormToAddCustomer")
+    public String showFormToAddCustomer(Model model){
+
+        UserDto user = new UserDto();
+        model.addAttribute("user", user);
+        model.addAttribute("role", Constants.CUSTOMER_ROLE);
+        model.addAttribute("isAdmin", false);
+
+        return "user/AddUserForm";
+    }
+
     @PostMapping("/processFormToAddCustomer")
-    public String processFormToAddCustomer(@Valid @ModelAttribute("customer")CustomerDto customerDto, BindingResult bindingResult, Model model){
+    public String processFormToAddCustomer(@Valid @ModelAttribute("user") UserDto userDto, BindingResult bindingResult, Model model){
         if(bindingResult.hasErrors()){
-            return "customer/AddCustomerForm";
+            return "user/AddUserForm";
         }else{
-            customerService.addCustomer(customerDto);
+            customerService.addCustomer(userDto);
             model.addAttribute("confirmationMsg", "Customer added successfully.");
             model.addAttribute("goBackLink", "/admin/dashboard");
             return "ConfirmationPage";
         }
     }
-    @GetMapping("/showFormToAddCustomer")
-    public String showFormToAddCustomer(Model model){
 
-        CustomerDto customer = new CustomerDto();
-        model.addAttribute("customer", customer);
-        return "customer/AddCustomerForm";
+
+    @GetMapping("/showFormToAddAdmin")
+    public String showFormToAddAdmin(Model model){
+
+        UserDto user = new UserDto();
+        model.addAttribute("user", user);
+        model.addAttribute("role", Constants.ADMIN_ROLE);
+        model.addAttribute("isAdmin", true);
+        return "user/AddUserForm";
     }
 
-    @GetMapping("/showFormToDeleteCustomer")
-    public String showFormToDeleteCustomer(Model model){
+    @PostMapping("/processFormToAddAdmin")
+    public String processFormToAddAdmin(@Valid @ModelAttribute("user") UserDto user, BindingResult bindingResult, Model model){
+        if(bindingResult.hasErrors()){
+            return "user/AddUserForm";
+        }else{
+            userService.addAdmin(user);
+            model.addAttribute("confirmationMsg", "Admin added successfully.");
+            model.addAttribute("goBackLink", "/admin/dashboard");
+            return "ConfirmationPage";
+        }
+    }
 
-        return "customer/AddCustomerForm";
+
+    @GetMapping("/showFormToDeleteUser")
+    public String showFormToDeleteUser(Model model){
+        return "user/DeleteUser";
+    }
+
+    @PostMapping("/processFormToDeleteUser")
+    public String processFormToDeleteUser(@RequestParam("username") String username, @RequestParam("cnic") String cnic, Model model,
+                                          Authentication authentication){
+        if(!(Utils.isNullOrEmptyString(username) || Utils.isNullOrEmptyString(cnic))){
+            if(username.equals(authentication.getName())){
+                return "redirect:/admin/showFormToDeleteUser?loggedInUserCannotDeleted";
+            }
+            //cannot delete the login user.
+            UserDto user = userService.deleteUserByUsernameAndCnic(username, cnic);
+            if(Objects.nonNull(user)){
+                model.addAttribute("confirmationMsg", "User deleted successfully.");
+                model.addAttribute("goBackLink", "/admin/dashboard");
+                return "ConfirmationPage";
+            }else{
+                return "redirect:/admin/showFormToDeleteUser?notfound";
+            }
+        }
+        return "redirect:/admin/showFormToDeleteUser?incompleteData";
     }
 }

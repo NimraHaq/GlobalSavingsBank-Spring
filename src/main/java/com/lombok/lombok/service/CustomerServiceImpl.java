@@ -2,44 +2,46 @@ package com.lombok.lombok.service;
 
 import com.lombok.lombok.dao.CustomerDao;
 import com.lombok.lombok.dto.CustomerDto;
+import com.lombok.lombok.dto.UserDto;
 import com.lombok.lombok.entity.Customer;
-import com.lombok.lombok.entity.User;
 import com.lombok.lombok.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 public class CustomerServiceImpl implements CustomerService{
     CustomerDao customerDao;
+    UserService userService;
 
     @Autowired
-    public CustomerServiceImpl(CustomerDao customerDao) {
+    public CustomerServiceImpl(CustomerDao customerDao, UserService userService) {
         this.customerDao = customerDao;
+        this.userService = userService;
     }
 
     @Override
-    public CustomerDto addCustomer(CustomerDto customerDto) {
-        Customer customer = mapDtoToEntity(customerDto);
-        customer.setIsActive(Constants.NOT_ACTIVE);
-        customer.setUser(User.builder().username(customerDto.getUsername()).password(customerDto.getPassword())
-                .email(customerDto.getEmail()).firstName(customerDto.getFirstName()).lastName(customerDto.getLastName())
-                .role(Constants.CUSTOMER_ROLE).isActive(Constants.NOT_ACTIVE).customer(customer).build());
-        Customer customerFromDb = customerDao.save(customer);
-        return mapEntityToDto(customerFromDb);
+    public UserDto addCustomer(UserDto userDto) {
+        userDto.setIsActive(Constants.NOT_ACTIVE);
+        userDto.setRole(Constants.CUSTOMER_ROLE);
+        userDto.setCustomerDto(new CustomerDto());
+        userDto.getCustomerDto().setIsActive(Constants.NOT_ACTIVE);
+        return userService.addUser(userDto);
     }
 
-    private Customer mapDtoToEntity(CustomerDto customerDto){
-        Customer customer = Customer.builder().chId(customerDto.getChId()).firstName(customerDto.getFirstName())
-                .lastName(customerDto.getLastName()).phoneNumber(customerDto.getPhoneNumber()).address(customerDto.getAddress())
-                .gender(customerDto.getGender()).status(customerDto.getStatus()).cnic(customerDto.getCnic()).age(customerDto.getAge()).postalCode(customerDto.getPostalCode()).build();
+    protected static Customer customerDtoToEntityMapping(CustomerDto customerDto){
+        Customer customer = Customer.builder().chId(customerDto.getChId()).defaultCardSrno(customerDto.getDefaultCardSrno())
+                .registeredCards(customerDto.getRegisteredCards()).isActive(customerDto.getIsActive())
+                .createdOn(customerDto.getCreatedOn()).lastUpdatedOn(customerDto.getLastUpdatedOn())
+                .build();
         return customer;
     }
-    private CustomerDto mapEntityToDto(Customer customer){
-        CustomerDto customerDto = CustomerDto.builder().chId(customer.getChId()).firstName(customer.getFirstName())
-                .lastName(customer.getLastName()).address(customer.getAddress()).phoneNumber(customer.getPhoneNumber())
-                .isActive(customer.getIsActive()).gender(customer.getGender()).email(customer.getEmail())
+    protected static CustomerDto customerEntityToDtoMapping(Customer customer){
+        CustomerDto customerDto = CustomerDto.builder().chId(customer.getChId()).defaultCardSrno(customer.getDefaultCardSrno())
+                .registeredCards(customer.getRegisteredCards()).isActive(customer.getIsActive())
                 .createdOn(customer.getCreatedOn()).lastUpdatedOn(customer.getLastUpdatedOn())
-                .age(customer.getAge()).status(customer.getStatus()).cnic(customer.getCnic()).postalCode(customer.getPostalCode()).build();
+                .build();
         return customerDto;
     }
 }

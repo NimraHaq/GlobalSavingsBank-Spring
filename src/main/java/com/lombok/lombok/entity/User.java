@@ -44,6 +44,27 @@ public class User {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "gender")
+    private String gender;
+
+    @Column(name = "postal_code")
+    private String postalCode;
+
+    @Column(name = "address")
+    private String address;
+
+
+    @Column(name = "phone", length = 45)
+    private String phoneNumber;
+
+
+    @Column(name = "age")
+    private Integer age;
+
+    @Column(name = "cnic", length = 45, nullable = false)
+    private String cnic;
+
+
     @Check(constraints = "is_active IN ('Y', 'N')")
     @ColumnDefault("'Y'")
     @Column(name = "is_active", length = 1, nullable = false,
@@ -51,7 +72,7 @@ public class User {
     private String isActive = "Y";
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="ch_id")
+    @JoinColumn(name="ch_id",  foreignKey = @ForeignKey(name = "FK_customer"))
     private Customer customer;
 
     @CreationTimestamp

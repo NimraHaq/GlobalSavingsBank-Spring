@@ -47,7 +47,7 @@ public class CardServiceImpl implements CardService{
     }
 
     private CardDto mapToCardDto(Card card){
-        CardDto cardDto = new CardDto.Builder().cardSrno(card.getCardSrno())
+        CardDto cardDto = CardDto.builder().cardSrno(card.getCardSrno())
                 .cardNo(card.getCardNo()).category(card.getCategory()).isMainCard(card.getIsMainCard())
                 .primaryCardNo(card.getPrimaryCardNo()).chId(card.getCh_id()).isActive(card.getIsActive())
                 .createdOn(card.getCreatedOn()).lastUpdatedOn(card.getLastUpdatedOn())

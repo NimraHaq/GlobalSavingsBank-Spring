@@ -44,6 +44,12 @@ public class Card {
     columnDefinition = "CHAR(1) DEFAULT 'Y'")
     private String isMainCard= Constants.IS_ACTIVE;
 
+    @Check(constraints = "card_status IN ('A', 'B', 'F')")
+    @ColumnDefault("'A'")
+    @Column(name = "card_status", length = 1, nullable = false)
+    @Builder.Default
+    private String cardStatus = Constants.CARD_PRE_ACTIVE_STATUS;
+
     @Check(constraints = "is_active IN ('Y', 'N')")
     @ColumnDefault("'Y'")
     @Column(name = "is_active", length = 1, nullable = false,

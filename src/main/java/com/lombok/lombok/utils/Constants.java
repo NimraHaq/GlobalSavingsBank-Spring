@@ -7,4 +7,6 @@ public class Constants {
     public static final String ADMIN_ROLE = "ADMIN";
     public static final String CARD_PRE_ACTIVE_STATUS = "B";
 
+    public static final String PASSWORD_HASHING_NOOP = "{noop}";
+
 }

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete User &middot; Global Savings Bank</title>
+    <style>
+        :root {
+            --navy:   #0d1b3e;
+            --navy2:  #102a5c;
+            --ink:    #1a2238;
+            --line:   #d3dae8;
+            --accent: #2f6df6;
+            --accent-dk: #1f53c9;
+            --muted:  #6b7689;
+            --danger: #b3261e;
+            --danger-bg: #fbe9e7;
+            --danger-dk: #8f1c16;
+            --ok:     #1b7a47;
+            --ok-bg:  #e6f4ec;
+            --bg:     #f4f6fb;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+            padding: 40px 20px;
+        }
+        .form-wrap { max-width: 520px; margin: 0 auto; }
+
+        .form-head {
+            background: linear-gradient(120deg, var(--navy) 0%, var(--navy2) 100%);
+            color: #fff;
+            padding: 24px 30px;
+            border-radius: 14px 14px 0 0;
+        }
+        .form-head h1 { font-size: 1.35rem; font-weight: 600; }
+        .form-head p  { color: rgba(255,255,255,.72); font-size: .9rem; margin-top: 5px; }
+
+        .form-body {
+            background: #fff;
+            padding: 28px 30px;
+            border: 1px solid var(--line);
+            border-top: none;
+            border-radius: 0 0 14px 14px;
+            box-shadow: 0 8px 30px rgba(13,27,62,.06);
+        }
+
+        .warn-banner {
+            background: var(--danger-bg);
+            color: var(--danger-dk);
+            border-radius: 9px;
+            padding: 11px 14px;
+            font-size: .86rem;
+            line-height: 1.4;
+            margin-bottom: 22px;
+            display: flex;
+            gap: 9px;
+            align-items: flex-start;
+        }
+        .warn-banner svg { flex-shrink: 0; margin-top: 1px; }
+
+        /* result alerts (success / not found) */
+        .alert {
+            padding: 12px 14px;
+            border-radius: 9px;
+            font-size: .9rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+        .alert-ok    { background: var(--ok-bg);     color: var(--ok); }
+        .alert-error { background: var(--danger-bg); color: var(--danger); }
+
+        .field { margin-bottom: 18px; }
+        .field label {
+            display: block;
+            font-size: .82rem;
+            font-weight: 600;
+            margin-bottom: 7px;
+        }
+        .field input {
+            width: 100%;
+            padding: 12px 13px;
+            border: 1px solid var(--line);
+            border-radius: 9px;
+            font-size: .96rem;
+            color: var(--ink);
+            background: #fbfcfe;
+            transition: border-color .15s, box-shadow .15s, background .15s;
+        }
+        .field input:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(47,109,246,.15);
+        }
+
+        .actions { display: flex; gap: 11px; margin-top: 24px; }
+        .btn {
+            padding: 12px 24px;
+            border-radius: 9px;
+            font-size: .95rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid transparent;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+        }
+        .btn-danger { background: var(--danger); color: #fff; border: none; }
+        .btn-danger:hover { background: var(--danger-dk); }
+        .btn-ghost { background: #fff; color: var(--ink); border: 1px solid var(--line); }
+        .btn-ghost:hover { background: var(--bg); }
+    </style>
+</head>
+<body>
+
+<div class="form-wrap">
+    <div class="form-head">
+        <h1>Delete User</h1>
+        <p>Remove a user account by verifying username and CNIC.</p>
+    </div>
+
+    <div class="form-body">
+
+        <!-- permanent-action warning -->
+        <div class="warn-banner">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l10 18H2L12 2z"/><path d="M12 9v4M12 17h.01"/></svg>
+            <span>This permanently deletes the user account. This action cannot be undone.</span>
+        </div>
+
+        <!-- not-found / mismatch message -->
+        <div class="alert alert-error" th:if="${param.notfound}">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+            <span>No user found matching that username and CNIC.</span>
+        </div>
+        <div class="alert alert-error" th:if="${param.incompleteData}">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+            <span>Kindly provide username and cnic.</span>
+        </div>
+        <div class="alert alert-error" th:if="${param.loggedInUserCannotDeleted}">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+            <span>Logged-in user cannot be deleted.</span>
+        </div>
+
+        <!-- POST form; th:action injects the CSRF token automatically -->
+        <form th:action="@{/admin/processFormToDeleteUser}" method="post">
+
+            <div class="field">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username"
+                       placeholder="e.g. n.haq" required />
+            </div>
+
+            <div class="field">
+                <label for="cnic">CNIC</label>
+                <input type="text" id="cnic" name="cnic"
+                       placeholder="XXXXX-XXXXXXX-X" autocomplete="off" required />
+            </div>
+
+            <div class="actions">
+                <button type="submit" class="btn btn-danger">Delete User</button>
+                <a th:href="@{/admin/dashboard}" class="btn btn-ghost">Cancel</a>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+</body>
+</html>

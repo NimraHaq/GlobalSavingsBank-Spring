@@ -136,6 +136,7 @@
 
         input[type=text],
         input[type=number],
+        input[type=password],
         input[type=email],
         input[type=tel] {
             width: 100%;
@@ -238,14 +239,14 @@
 
 <div class="form-wrap">
     <div class="form-head" style="text-align: center;">
-        <h1>Add Customer</h1>
+        <h1>ADD <span th:text="${role}"></span></h1>
     </div>
 
     <div class="form-body">
         <!-- Binds to a CustomerDto named "customer" in the model.
              Controller: model.addAttribute("customer", new CustomerDto());
               -->
-        <form th:action="@{/admin/processFormToAddCustomer}" th:object="${customer}" method="post">
+        <form th:action="${role == 'CUSTOMER'} ?  @{/admin/processFormToAddCustomer} : @{/admin/processFormToAddAdmin}" th:object="${user}" method="post">
 
             <div class="grid">
 
@@ -346,8 +347,8 @@
                 </div>
 
                 <div class="actions">
-                    <button type="submit" class="btn btn-primary">Save Customer</button>
-                    <a th:href="@{/customers/list}" class="btn btn-ghost">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <a th:href="@{/admin/dashboard}" class="btn btn-ghost">Cancel</a>
                 </div>
 
             </div>

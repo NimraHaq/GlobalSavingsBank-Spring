@@ -27,38 +27,6 @@ public class Customer {
     @Column(name = "ch_id")
     private int chId;
 
-    @Column(name = "first_name", length = 45)
-    private String firstName;
-
-    @Column(name = "last_name", length = 45)
-    private String lastName;
-
-    @Column(name = "cnic", length = 45, nullable = false)
-    private String cnic;
-
-    @Column(name = "phone", length = 45)
-    private String phoneNumber;
-
-    @Column(name = "age")
-    private Integer age;
-
-    @Column(name = "postal_code")
-    private String postalCode;
-
-    @Column(name = "address")
-    private String address;
-
-    @Column(name = "email")
-    private String email;
-
-    @Column(name = "gender")
-    private String gender;
-
-    @Check(constraints = "is_active IN ('A', 'B', 'F)")
-    @ColumnDefault("'A'")
-    @Column(name = "status", length = 1, nullable = false)
-    @Builder.Default
-    private String status = Constants.CARD_PRE_ACTIVE_STATUS;
 
     @Check(constraints = "is_active IN ('Y', 'N')")
     @ColumnDefault("'Y'")
@@ -67,14 +35,24 @@ public class Customer {
     @Builder.Default
     private String isActive = Constants.IS_ACTIVE;
 
+    @Column(name = "default_card_srno")
+    @Builder.Default
+    private Long defaultCardSrno = null;
+
+    @Builder.Default
+    @Column(name = "registered_cards")
+    private int registeredCards = 0;
+
+
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
     private User user;
+
 
     @Column(name="created_on", nullable = false)
     @CreationTimestamp
     private LocalDateTime createdOn;
 
-    @Column(name="last_updated_on")
+    @Column(name="last_updated_on", nullable = true)
     @UpdateTimestamp
     private LocalDateTime lastUpdatedOn;
 

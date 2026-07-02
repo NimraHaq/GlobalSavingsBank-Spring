@@ -1,8 +1,8 @@
 package com.lombok.lombok.service;
 
-import com.lombok.lombok.dto.CustomerDto;
+import com.lombok.lombok.dto.UserDto;
 
 public interface CustomerService {
-    CustomerDto addCustomer(CustomerDto customerDto);
+    UserDto addCustomer(UserDto userDto);
 }
 

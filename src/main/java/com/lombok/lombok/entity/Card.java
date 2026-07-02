@@ -56,6 +56,14 @@ public class Card {
             columnDefinition = "CHAR(1) DEFAULT 'Y'")
     private String isActive= Constants.IS_ACTIVE;
 
+    @OneToOne(mappedBy = "card", cascade = CascadeType.ALL)
+    private CardFunds cardFunds;
+
+    //not including cascade remove type, because customer is not deleted when card deletes
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinColumn(name = "ch_id", referencedColumnName = "ch_id", foreignKey = @ForeignKey(name = "FK_customer"))
+    private Customer customer;
+
     @Column(name="created_on", nullable = false)
     @CreationTimestamp
     private LocalDateTime createdOn;

@@ -69,7 +69,10 @@ public class UserServiceImpl implements UserService{
         if(user.getRole().equalsIgnoreCase(Constants.CUSTOMER_ROLE)){
             //generate new card
         }
-
+        user.setIsActive(Constants.IS_ACTIVE);
+        if(Objects.nonNull(user.getCustomerDto())){
+            user.getCustomerDto().setIsActive(Constants.IS_ACTIVE);
+        }
         user.setPassword(Constants.PASSWORD_HASHING_NOOP + password);
         userDao.save(userDtoToEntityMapping(user));
     }

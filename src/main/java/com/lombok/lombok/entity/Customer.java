@@ -12,6 +12,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -46,6 +47,12 @@ public class Customer {
 
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
     private User user;
+
+    //if a customer is deleted, all cards must be deleted, so its a cascade delete on customer side
+    //but if a card is deleted, customer is not deleted, so we remove cascade-Remove from card side
+    @OneToMany(mappedBy = "customer", cascade =  {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.REFRESH, CascadeType.REMOVE})
+    private List<Card> cards;
 
 
     @Column(name="created_on", nullable = false)

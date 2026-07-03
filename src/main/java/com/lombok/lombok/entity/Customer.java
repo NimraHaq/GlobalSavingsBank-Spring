@@ -2,10 +2,7 @@ package com.lombok.lombok.entity;
 
 import com.lombok.lombok.utils.Constants;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Check;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -46,6 +43,8 @@ public class Customer {
 
 
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private User user;
 
     //if a customer is deleted, all cards must be deleted, so its a cascade delete on customer side

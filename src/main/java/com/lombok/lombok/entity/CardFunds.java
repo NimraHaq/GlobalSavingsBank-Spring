@@ -1,10 +1,7 @@
 package com.lombok.lombok.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -35,6 +32,8 @@ public class CardFunds {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "card_srno", referencedColumnName = "card_srno", foreignKey = @ForeignKey(name = "FK_cards"))
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Card card;
 
     @CreationTimestamp

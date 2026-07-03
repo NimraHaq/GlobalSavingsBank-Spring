@@ -2,10 +2,7 @@ package com.lombok.lombok.entity;
 
 import com.lombok.lombok.utils.Constants;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Check;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -62,6 +59,8 @@ public class Card {
     //not including cascade remove type, because customer is not deleted when card deletes
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "ch_id", referencedColumnName = "ch_id", foreignKey = @ForeignKey(name = "FK_customer"))
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Customer customer;
 
     @Column(name="created_on", nullable = false)

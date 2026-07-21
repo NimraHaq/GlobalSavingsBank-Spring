@@ -8,8 +8,8 @@
 		<version>4.1.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.lombok</groupId>
-	<artifactId>GlobalSavingsBank</artifactId>
+	<groupId>com.vault</groupId>
+	<artifactId>Vault</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name/>
 	<description/>

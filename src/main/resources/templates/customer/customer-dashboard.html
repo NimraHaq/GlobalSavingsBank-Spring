@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Global Savings Bank</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}" />
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Simple line icons-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.5.5/css/simple-line-icons.min.css" rel="stylesheet" />
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link th:href="@{/css/styles.css}" rel="stylesheet" />
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #f4f6fb;
+        }
+
+        .app-header {
+            background: linear-gradient(120deg, #0d1b3e 0%, #102a5c 100%);
+            color: #fff;
+            padding: 0 32px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 12px rgba(13, 27, 62, .18);
+        }
+
+        /* Left: brand */
+        .app-header .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: .01em;
+        }
+        .app-header .brand .glyph {
+            width: 34px; height: 34px;
+            display: grid; place-items: center;
+            border: 1.5px solid rgba(255, 255, 255, .5);
+            border-radius: 8px;
+            color: #c8a24a;
+            font-weight: 700;
+        }
+
+        /* Right: greeting */
+        .app-header .greeting {
+            display: flex;
+            align-items: left;
+            gap: 30px;
+            font-size: .98rem;
+        }
+        .app-header .greeting .welcome {
+            color: rgba(255, 255, 255, .78);
+        }
+        .app-header .greeting .username {
+            font-weight: 600;
+            color: #fff;
+        }
+        .app-header .greeting .avatar {
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .14);
+            display: grid; place-items: center;
+            font-weight: 600;
+            color: #fff;
+            font-size: .9rem;
+        }
+    </style>
+<body id="page-top">
+
+
+
+<!-- Navigation-->
+<a class="menu-toggle rounded" href="#"><i class="fas fa-bars"></i></a>
+<nav id="sidebar-wrapper">
+    <ul class="sidebar-nav">
+        <li class="sidebar-brand"><a href="#page-top">Customer Dashboard</a></li>
+        <li class="sidebar-nav-item"><a th:href="@{/customer/showFormToAddAdmin}">Funds Transfer</a></li>
+        <li class="sidebar-nav-item"><a th:href="@{/customer/showCustomerCards(id=${user.getCustomerDto().getChId()})}">Cards</a></li>
+        <li class="sidebar-nav-item"><a th:href="@{/customer/showFormToDeleteUser}">Transactions</a></li>
+        <li class="sidebar-nav-item"><a th:href="@{/customer/showFormToAddCustomer}">Profile Update</a></li>
+
+        <li class="sidebar-nav-item">
+            <form th:action="@{/logout}" method="post" style="display:inline;">
+                <button type="submit" class="sidebar-nav-item">Logout</button>
+            </form>
+        </li>
+    </ul>
+</nav>
+<header class="app-header" th:fragment="appHeader">
+
+    <div class="brand">
+        <span class="glyph">G</span>
+        Global Savings Bank
+    </div>
+
+
+</header>
+<!-- Header-->
+<header class="masthead d-flex align-items-left">
+    <div class="greeting">
+        <span class="welcome"></span></span>
+    </div>
+    <div class="container px-4 px-lg-5 text-left">
+        <h3 class="mb-5">WELCOME! <span th:text="${user.firstName}"></span></h3>
+        <h3 class="mb-5">GSB-<em>Your Partner in Prosperity.</em></h3>
+        <a class="btn btn-primary btn-xl" href="/login">View Customers</a>
+    </div>
+</header>
+<!-- About-->
+<section class="content-section bg-light" id="about">
+    <div class="container px-4 px-lg-5 text-center">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-lg-10">
+                <h2>Your gateway to financial growth, locally and worldwide.</h2>
+                <p class="lead mb-5">
+                    With innovative savings solutions, secure digital banking, and personalized customer care, we make managing money simple, safe, and globally connected.
+                </p>
+                <a class="btn btn-dark btn-xl" href="#services">What We Offer</a>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Services-->
+<section class="content-section bg-primary text-white text-center" id="services">
+    <div class="container px-4 px-lg-5">
+        <div class="content-section-heading">
+            <h3 class="text-secondary mb-0">Services</h3>
+            <h2 class="mb-5">What We Offer</h2>
+        </div>
+        <div class="row gx-4 gx-lg-5">
+            <div class="col-lg-3 col-md-6 mb-5 mb-lg-0">
+                <span class="service-icon rounded-circle mx-auto mb-3"><i class="icon-screen-smartphone"></i></span>
+                <h4><strong>Customer Care</strong></h4>
+                <p class="text-faded mb-0">24/7 active customer care helpline.</p>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-5 mb-lg-0">
+                <span class="service-icon rounded-circle mx-auto mb-3"><i class="icon-pencil"></i></span>
+                <h4><strong>Digital</strong></h4>
+                <p class="text-faded mb-0">Seamless online and mobile banking services.</p>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-5 mb-md-0">
+                <span class="service-icon rounded-circle mx-auto mb-3"><i class="icon-like"></i></span>
+                <h4><strong>Advisory</strong></h4>
+                <p class="text-faded mb-0">
+                    Expert guidance for financial planning.
+                </p>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <span class="service-icon rounded-circle mx-auto mb-3"><i class="icon-mustache"></i></span>
+                <h4><strong>Security</strong></h4>
+                <p class="text-faded mb-0">Advanced safeguards to protect your funds.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+<!-- Footer-->
+<footer class="footer text-center">
+    <div class="container px-4 px-lg-5">
+        <ul class="list-inline mb-5">
+            <li class="list-inline-item">
+                <a class="social-link rounded-circle text-white mr-3" href="#!"><i class="icon-social-facebook"></i></a>
+            </li>
+            <li class="list-inline-item">
+                <a class="social-link rounded-circle text-white mr-3" href="#!"><i class="icon-social-twitter"></i></a>
+            </li>
+            <li class="list-inline-item">
+                <a class="social-link rounded-circle text-white" href="#!"><i class="icon-social-github"></i></a>
+            </li>
+        </ul>
+        <p class="text-muted small mb-0">Copyright &copy; Vault 2026</p>
+    </div>
+</footer>
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top"><i class="fas fa-angle-up"></i></a>
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<script th:src="@{/js/scripts.js}"></script>
+</body>
+</html>

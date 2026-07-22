@@ -15,12 +15,12 @@ import java.time.LocalDateTime;
 
 
 public class CustomerDto {
-    private int chId;
+    private Integer chId;
 
 
     private Long defaultCardSrno = null;
 
-    private int registeredCards = 0;
+    private Integer registeredCards = 0;
 
     @Builder.Default
     private String isActive = Constants.OPTION_YES;

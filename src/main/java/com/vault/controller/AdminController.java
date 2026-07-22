@@ -1,6 +1,8 @@
 package com.vault.controller;
 
 import com.vault.dto.UserDto;
+import com.vault.enums.CardStatus;
+import com.vault.service.CardService;
 import com.vault.service.CustomerService;
 import com.vault.service.UserService;
 import com.vault.utils.Constants;
@@ -15,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 
@@ -24,11 +27,13 @@ public class AdminController {
 
     private UserService userService;
     private CustomerService customerService;
+    private CardService cardService;
 
     @Autowired
-    public AdminController(UserService userService, CustomerService customerService) {
+    public AdminController(UserService userService, CustomerService customerService, CardService cardService) {
         this.userService = userService;
         this.customerService = customerService;
+        this.cardService = cardService;
     }
 
     //instead of using StringTrimmerEditor, use @NotBlank annotion
@@ -51,11 +56,49 @@ public class AdminController {
         return "admin/admin-dashboard";
     }
 
-//    @GetMapping("/customers")
-//    public String getAllCustomers(Model model){
-//        model.addAttribute("user", );
-//        return "admin-dashboard";
-//    }
+    //one row per card, so a customer with multiple cards appears multiple times
+    @GetMapping("/showCustomers")
+    public String showCustomers(Model model){
+        model.addAttribute("cardsList", cardService.getAllCards());
+        model.addAttribute("blockedStatus", CardStatus.BLOCKED.getStatus());
+        return "admin/ShowCustomers";
+    }
+
+    @PostMapping("/processBlockCard")
+    public String processBlockCard(@RequestParam("cardNo") long cardNo, Model model){
+        cardService.blockCard(cardNo);
+        model.addAttribute("confirmationMsg", "Card " + cardNo + " blocked successfully.");
+        model.addAttribute("goBackLink", "/admin/showCustomers");
+        return "ConfirmationPage";
+    }
+
+    @GetMapping("/showFormToDeposit")
+    public String showFormToDeposit(@RequestParam("cardNo") long cardNo, Model model){
+        model.addAttribute("cardNo", cardNo);
+        model.addAttribute("maxAmount", Constants.MAX_DEPOSIT_AMOUNT);
+        return "admin/DepositForm";
+    }
+
+    @PostMapping("/processAdminDeposit")
+    public String processAdminDeposit(@RequestParam("cardNo") long cardNo,
+                                      @RequestParam(value = "amount", required = false) BigDecimal amount,
+                                      Model model){
+        //browser validation can be bypassed, so the amount is checked here as well
+        if(Objects.isNull(amount) || amount.compareTo(BigDecimal.ZERO) <= 0){
+            return "redirect:/admin/showFormToDeposit?cardNo=" + cardNo + "&invalidAmount";
+        }
+        if(amount.compareTo(Constants.MAX_DEPOSIT_AMOUNT) > 0){
+            return "redirect:/admin/showFormToDeposit?cardNo=" + cardNo + "&amountTooLarge";
+        }
+
+        System.out.println("amount for deposite is : " + amount + "card no = " + cardNo);
+
+        //TODO: update card_funds for this cardNo with the deposited amount
+
+        model.addAttribute("confirmationMsg", "Amount " + amount + " deposited successfully.");
+        model.addAttribute("goBackLink", "/admin/showCustomers");
+        return "ConfirmationPage";
+    }
 
     @GetMapping("/showFormToAddCustomer")
     public String showFormToAddCustomer(Model model){

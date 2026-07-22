@@ -16,12 +16,12 @@ import java.time.LocalDateTime;
 @Builder
 
 public class CardDto {
-    private long cardSrno;
-    private long cardNo;
+    private Long cardSrno;
+    private Long cardNo;
     private String category;
     private CustomerDto customerDto;
-    private long primaryCardNo;
-    private String cardStatus = Constants.CARD_PRE_ACTIVE_STATUS;
+    private Long primaryCardNo;
+    private String cardStatus = Constants.CARD_ACTIVE_STATUS;
     private String isMainCard= Constants.OPTION_YES;
     private String isActive= Constants.OPTION_YES;
     private LocalDateTime createdOn;

@@ -1,26 +1,36 @@
-package com.vault.service;
+package com.vault.service.impl;
 
 import com.vault.dao.CardDao;
 import com.vault.dto.CardDto;
-import com.vault.dto.CustomerDto;
+import com.vault.dto.TransactionDto;
 import com.vault.dto.UserDto;
 import com.vault.entity.Card;
+import com.vault.entity.Customer;
+import com.vault.enums.CardStatus;
+import com.vault.enums.ServiceIds;
+import com.vault.exceptions.CardCouldNotBeGeneratedException;
 import com.vault.exceptions.CardNotFoundException;
+import com.vault.service.CardService;
+import com.vault.service.TransactionService;
 import com.vault.utils.Constants;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 @Service
-public class CardServiceImpl implements CardService{
+public class CardServiceImpl extends CardService {
     private CardDao cardDao;
-    private CustomerService customerService;
-    public CardServiceImpl(CardDao cardDao, CustomerService customerService) {
+    private TransactionService transactionService;
+
+    public CardServiceImpl(CardDao cardDao, TransactionService transactionService) {
         this.cardDao = cardDao;
-        this.customerService = customerService;
+        this.transactionService = transactionService;
     }
     @Override
     public CardDto addCard(UserDto user) {
@@ -29,12 +39,20 @@ public class CardServiceImpl implements CardService{
         while (attempts < 5) {
             try {
                 card.setCardNo(generateRandomNumber());
-                return mapToCardDto(cardDao.saveAndFlush(mapToCardEntity(card)));   // flush forces the DB to check now
+                Optional<Card> cardEntity = Optional.ofNullable(cardDao.saveAndFlush(mapToCardEntity(card)));
+                cardEntity.ifPresent(c -> createTransaction(c));
+                return cardEntity.isPresent() ? mapToCardDto(cardEntity.get()) : null;   // flush forces the DB to check now
             } catch (DataIntegrityViolationException e) {
-                attempts++;   // collision on card number → try a new number
+                attempts++;   // if not a unique card number → try a new number
             }
         }
-        throw new IllegalStateException("Could not generate a unique card number");
+        throw new CardCouldNotBeGeneratedException("Could not generate a unique card number");
+    }
+
+    private TransactionDto createTransaction(Card card){
+        TransactionDto transactionDto = TransactionDto.builder().cardNo(card.getCardNo()).serviceId(ServiceIds.ADD_CARD.getServiceId())
+                .build();
+        return transactionService.addTransaction(transactionDto, card);
     }
 
 
@@ -62,9 +80,32 @@ public class CardServiceImpl implements CardService{
     }
 
     @Override
-    public List<CardDto> getCardsByChId(int chId) {
-        List<CardDto> cards = cardDao.findCardsByCustomer(CustomerServiceImpl.customerDtoToEntityMapping(customerService.getCustomerByChId(chId))).stream().map(this::mapToCardDto).collect(Collectors.toList());
+    public List<CardDto> getCardsByChId(Customer customer) {
+        List<CardDto> cards = cardDao.findCardsByCustomer(customer).stream().map(this::mapToCardDto).collect(Collectors.toList());
         return cards;
+    }
+
+    @Override
+    public List<CardDto> getAllCards() {
+        return cardDao.findAll().stream().map(this::mapToCardDto).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public CardDto blockCard(long cardNo) {
+        Card card = cardDao.findByCardNo(cardNo);
+        if(Objects.isNull(card)){
+            throw new CardNotFoundException("Card not found.");
+        }
+        //loaded inside a transaction, so the status change is flushed by dirty checking
+        card.setCardStatus(CardStatus.BLOCKED.getStatus());
+        return mapToCardDto(card);
+    }
+
+    @Override
+    public List<TransactionDto> getAllCardsTransactions(Customer customer) {
+        List<Card> cardsList = cardDao.findCardsByCustomer(customer);
+        return transactionService.getAllCardsTransactions(cardsList);
     }
 
     private Long generateRandomNumber() {

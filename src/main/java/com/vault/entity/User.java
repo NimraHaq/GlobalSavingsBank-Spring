@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 public class User {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(name="username", nullable = false, length = 20, unique = true)
     private String username;
@@ -71,7 +71,7 @@ public class User {
             columnDefinition = "CHAR(1) DEFAULT 'Y'")
     private String isActive = "Y";
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name="ch_id",  foreignKey = @ForeignKey(name = "FK_users_customer"))
     private Customer customer;
 

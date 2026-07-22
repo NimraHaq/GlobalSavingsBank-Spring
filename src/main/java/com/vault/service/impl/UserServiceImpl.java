@@ -1,9 +1,11 @@
-package com.vault.service;
+package com.vault.service.impl;
 
 import com.vault.dao.UserDao;
 import com.vault.dto.CardDto;
 import com.vault.dto.UserDto;
 import com.vault.entity.User;
+import com.vault.service.CardService;
+import com.vault.service.UserService;
 import com.vault.utils.Constants;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl extends UserService {
 
     UserDao userDao;
     CardService cardService;
@@ -81,6 +83,7 @@ public class UserServiceImpl implements UserService{
             user.getCustomerDto().setIsActive(Constants.OPTION_YES);
             if(Objects.nonNull(cardDto)){
                 user.getCustomerDto().setDefaultCardSrno(cardDto.getCardSrno());
+                user.getCustomerDto().setRegisteredCards(1);
             }
         }
         user.setPassword(Constants.PASSWORD_HASHING_NOOP + password);

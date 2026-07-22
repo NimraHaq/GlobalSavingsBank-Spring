@@ -23,7 +23,7 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ch_id")
-    private int chId;
+    private Integer chId;
 
 
     @Check(constraints = "is_active IN ('Y', 'N')")
@@ -39,18 +39,19 @@ public class Customer {
 
     @Builder.Default
     @Column(name = "registered_cards")
-    private int registeredCards = 0;
+    private Integer registeredCards = 0;
 
 
-    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private User user;
 
     //if a customer is deleted, all cards must be deleted, so its a cascade delete on customer side
     //but if a card is deleted, customer is not deleted, so we remove cascade-Remove from card side
+
     @OneToMany(mappedBy = "customer", cascade =  {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE,
-            CascadeType.REFRESH, CascadeType.REMOVE})
+            CascadeType.REFRESH, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private List<Card> cards;
 
 

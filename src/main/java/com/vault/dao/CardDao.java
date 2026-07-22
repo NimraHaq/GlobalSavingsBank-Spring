@@ -12,4 +12,5 @@ public interface CardDao extends JpaRepository<Card, Long> {
     Card findByCardNo(long cardNo);
     int deleteByCardNo(long cardNo);
     List<Card> findCardsByCustomer(Customer customer);
+
 }

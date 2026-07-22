@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -18,19 +19,21 @@ public class CardFunds {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
-    @Column(name = "ledger_balance")
-    private double ledgerBalance;
-
-    @Column(name = "card_balance")
-    private double cardBalance;
-
-    @Column(name = "card_blnc_onhold")
+    @Column(name = "ledger_balance", precision = 19, scale = 2)
     @Builder.Default
-    private double cardBalanceOnHold = 0d;
+    private BigDecimal ledgerBalance  = BigDecimal.ZERO;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @Column(name = "card_balance", precision = 19, scale = 2)
+    @Builder.Default
+    private BigDecimal cardBalance = BigDecimal.ZERO;
+
+    @Column(name = "card_blnc_onhold", precision = 19, scale = 2)
+    @Builder.Default
+    private BigDecimal cardBalanceOnHold = BigDecimal.ZERO;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "card_srno", referencedColumnName = "card_srno", foreignKey = @ForeignKey(name = "FK_cards"))
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

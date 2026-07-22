@@ -8,7 +8,11 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAmount;
+import java.time.temporal.TemporalUnit;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -21,17 +25,17 @@ public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "card_srno")
-    private long cardSrno;
+    private Long cardSrno;
 
     @Column(name = "card_no", unique = true, nullable = false, updatable = false)
-    private long cardNo;
+    private Long cardNo;
 
     @Column(name = "category", length = 1)
     private String category;
 
 
     @Column(name = "primary_cardno")
-    private long primaryCardNo;
+    private Long primaryCardNo;
 
     @Check(constraints = "is_main_card IN ('Y', 'N')")
     @ColumnDefault("'Y'")
@@ -43,7 +47,7 @@ public class Card {
     @ColumnDefault("'A'")
     @Column(name = "card_status", length = 1, nullable = false)
     @Builder.Default
-    private String cardStatus = Constants.CARD_PRE_ACTIVE_STATUS;
+    private String cardStatus = Constants.CARD_ACTIVE_STATUS;
 
     @Check(constraints = "is_active IN ('Y', 'N')")
     @ColumnDefault("'Y'")
@@ -51,15 +55,22 @@ public class Card {
             columnDefinition = "CHAR(1) DEFAULT 'Y'")
     private String isActive= Constants.OPTION_YES;
 
-    @OneToOne(mappedBy = "card", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "card", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private CardFunds cardFunds;
 
     //not including cascade remove type, because customer is not deleted when card deletes
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinColumn(name = "ch_id", referencedColumnName = "ch_id", foreignKey = @ForeignKey(name = "FK_cards_customer"))
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Customer customer;
+
+    @OneToMany(mappedBy = "card" , fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.MERGE, CascadeType.REMOVE})
+    private List<Transaction> transactions;
+
+    @Column(name = "card_expiry")
+    @Builder.Default
+    LocalDate cardExpiry = LocalDate.now().plusYears(3);
 
     @Column(name="created_on", nullable = false)
     @CreationTimestamp

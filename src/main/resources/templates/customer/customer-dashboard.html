@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Global Savings Bank</title>
+    <title>Vault</title>
     <!-- Favicon-->
     <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}" />
     <!-- Font Awesome icons (free version)-->
@@ -16,69 +16,8 @@
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css" />
     <!-- Core theme CSS (includes Bootstrap)-->
     <link th:href="@{/css/styles.css}" rel="stylesheet" />
-
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: #f4f6fb;
-        }
-
-        .app-header {
-            background: linear-gradient(120deg, #0d1b3e 0%, #102a5c 100%);
-            color: #fff;
-            padding: 0 32px;
-            height: 72px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 12px rgba(13, 27, 62, .18);
-        }
-
-        /* Left: brand */
-        .app-header .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            letter-spacing: .01em;
-        }
-        .app-header .brand .glyph {
-            width: 34px; height: 34px;
-            display: grid; place-items: center;
-            border: 1.5px solid rgba(255, 255, 255, .5);
-            border-radius: 8px;
-            color: #c8a24a;
-            font-weight: 700;
-        }
-
-        /* Right: greeting */
-        .app-header .greeting {
-            display: flex;
-            align-items: left;
-            gap: 30px;
-            font-size: .98rem;
-        }
-        .app-header .greeting .welcome {
-            color: rgba(255, 255, 255, .78);
-        }
-        .app-header .greeting .username {
-            font-weight: 600;
-            color: #fff;
-        }
-        .app-header .greeting .avatar {
-            width: 38px; height: 38px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, .14);
-            display: grid; place-items: center;
-            font-weight: 600;
-            color: #fff;
-            font-size: .9rem;
-        }
-    </style>
-<body id="page-top">
+</head>
+<body id="page-top" class="page-app">
 
 
 
@@ -102,8 +41,8 @@
 <header class="app-header" th:fragment="appHeader">
 
     <div class="brand">
-        <span class="glyph">G</span>
-        Global Savings Bank
+        <span class="glyph">V</span>
+        Vault
     </div>
 
 
@@ -115,7 +54,7 @@
     </div>
     <div class="container px-4 px-lg-5 text-left">
         <h3 class="mb-5">WELCOME! <span th:text="${user.firstName}"></span></h3>
-        <h3 class="mb-5">GSB-<em>Your Partner in Prosperity.</em></h3>
+        <h3 class="mb-5">Vault-<em>Your Partner in Prosperity.</em></h3>
         <a class="btn btn-primary btn-xl" href="/login">View Customers</a>
     </div>
 </header>

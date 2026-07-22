@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Card Transactions &middot; Vault</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}" />
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Simple line icons-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.5.5/css/simple-line-icons.min.css" rel="stylesheet" />
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link th:href="@{/css/styles.css}" rel="stylesheet" />
+</head>
+<body id="page-top" class="page-app">
+
+<header class="app-header">
+    <div class="brand">
+        <span class="glyph">V</span>
+        Vault
+    </div>
+</header>
+
+<div class="container px-4 px-lg-5" style="padding-top: 40px; padding-bottom: 40px;">
+    <h3 class="mb-4">Card Transactions</h3>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle bg-white">
+            <thead>
+            <tr>
+                <th>Trans ID</th>
+                <th>Card No</th>
+                <th>Service ID</th>
+                <th>Service Charges</th>
+                <th>Amount Processed</th>
+                <th>Created On</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="txn : ${transactionsList}">
+                <td th:text="${txn.transId}"></td>
+                <td th:text="${txn.cardNo}"></td>
+                <td th:text="${txn.serviceId}"></td>
+                <td th:text="${txn.serviceCharges}"></td>
+                <td th:text="${txn.amountProcessed}"></td>
+                <td th:text="${txn.createdOn}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <a th:href="@{/customer/dashboard}" class="btn btn-dark">Back</a>
+</div>
+
+</body>
+</html>
